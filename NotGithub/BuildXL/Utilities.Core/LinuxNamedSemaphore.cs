@@ -100,18 +100,15 @@ namespace BuildXL.Utilities.Core
                     return new Failure<ArgumentException>(new ArgumentException($"Semaphore name can only contain up to {Ipc.SemaphoreNameMaxLength} characters."));
                 }
 
-                var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: true);
-
+                var error = Ipc.SemOpen(name, initialValue, out semaphore, errorIfExists: false);
+                 
                 if (semaphore == IntPtr.Zero || error != 0)
                 {
                     if (error == 17) // EEXIST
                     {
-                        // Semaphore already exists, just open it.
-                        error = Ipc.SemOpen(name, initialValue, out semaphore, errorIfExists: false);
-                        if (semaphore == IntPtr.Zero || error != 0)
-                        {
-                            return new Failure<string>($"Failed to open existing semaphore with name '{name}' with errno: {error}");
-                        }
+                       
+                        return new Failure<string>($"Failed to open existing semaphore with name '{name}' with errno: {error}. Although it was attempt to open");
+                        
                     }
                     else
                     {
