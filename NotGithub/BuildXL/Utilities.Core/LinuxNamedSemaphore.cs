@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using BuildXL.Interop.Linux;
+using BuildXL.Utilities.Core.Tasks;
 
 namespace BuildXL.Utilities.Core
 {
@@ -38,23 +39,34 @@ namespace BuildXL.Utilities.Core
         /// </summary>
         /// <param name="name">Name must be of the form /name up to 251 characters.</param>
         /// <param name="initialValue">Initial value of the semaphore</param>
+        private static Possible<Unit> ValidateName(string name)
+        {
+            if (string.IsNullOrEmpty(name) || name[0] != '/')
+            {
+                return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/'"));
+            }
+
+            if (name.Count(c => c == '/') != 1)
+            {
+                return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/' and contain exactly one '/' character"));
+            }
+
+            if (name.Length >= Ipc.SemaphoreNameMaxLength)
+            {
+                return new Failure<ArgumentException>(new ArgumentException($"Semaphore name can only contain up to {Ipc.SemaphoreNameMaxLength} characters."));
+            }
+
+            return Unit.Void;
+        }
+
         public static Possible<INamedSemaphore> CreateNew(string name, uint initialValue)
         {
             try
             {
-                if (string.IsNullOrEmpty(name) || name[0] != '/')
+                var validation = ValidateName(name);
+                if (!validation.Succeeded)
                 {
-                    return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/'"));
-                }
-
-                if (name.Count(c => c == '/') != 1)
-                {
-                    return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/' and contain exactly one '/' character"));
-                }
-
-                if (name.Length >= Ipc.SemaphoreNameMaxLength)
-                {
-                    return new Failure<ArgumentException>(new ArgumentException($"Semaphore name can only contain up to {Ipc.SemaphoreNameMaxLength} characters."));
+                    return validation.Failure;
                 }
 
                 var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: true);
@@ -85,30 +97,24 @@ namespace BuildXL.Utilities.Core
         {
             try
             {
-                if (string.IsNullOrEmpty(name) || name[0] != '/')
+                var validation = ValidateName(name);
+                if (!validation.Succeeded)
                 {
-                    return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/'"));
+                    return validation.Failure;
                 }
 
-                if (name.Count(c => c == '/') != 1)
-                {
-                    return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/' and contain exactly one '/' character"));
-                }
+                var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: true);
 
-                if (name.Length >= Ipc.SemaphoreNameMaxLength)
-                {
-                    return new Failure<ArgumentException>(new ArgumentException($"Semaphore name can only contain up to {Ipc.SemaphoreNameMaxLength} characters."));
-                }
-
-                var error = Ipc.SemOpen(name, initialValue, out semaphore, errorIfExists: false);
-                 
                 if (semaphore == IntPtr.Zero || error != 0)
                 {
                     if (error == 17) // EEXIST
                     {
-                       
-                        return new Failure<string>($"Failed to open existing semaphore with name '{name}' with errno: {error}. Although it was attempt to open");
-                        
+                        // Semaphore already exists, just open it.
+                        error = Ipc.SemOpen(name, initialValue, out semaphore, errorIfExists: false);
+                        if (semaphore == IntPtr.Zero || error != 0)
+                        {
+                            return new Failure<string>($"Failed to open existing semaphore with name '{name}' with errno: {error}");
+                        }
                     }
                     else
                     {
