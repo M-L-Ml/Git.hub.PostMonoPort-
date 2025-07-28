@@ -59,28 +59,34 @@ namespace BuildXL.Utilities.Core
             return Unit.Void;
         }
 
+        private static Possible<INamedSemaphore> CreateOrOpenInternal(string name, uint initialValue, bool createNew)
+        {
+            var validation = ValidateName(name);
+            if (!validation.Succeeded)
+            {
+                return validation.Failure;
+            }
+
+            var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: createNew);
+
+            if (semaphore == IntPtr.Zero || error != 0)
+            {
+
+                var failureMessage = createNew
+                    ? (error == 17 ? $"Semaphore with name '{name}' already exists." : $"Failed to create a semaphore with name '{name}' and value {initialValue} with errno: {error}")
+                    : $"Failed to create or open a semaphore with name '{name}' and value {initialValue} with errno: {error}";
+
+                return new Failure<string>(failureMessage);
+            }
+
+            return new LinuxNamedSemaphore(name, semaphore);
+        }
+
         public static Possible<INamedSemaphore> CreateNew(string name, uint initialValue)
         {
             try
             {
-                var validation = ValidateName(name);
-                if (!validation.Succeeded)
-                {
-                    return validation.Failure;
-                }
-
-                var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: true);
-
-                if (semaphore == IntPtr.Zero || error != 0)
-                {
-                    if (error == 17) // EEXIST
-                    {
-                        return new Failure<string>($"Semaphore with name '{name}' already exists.");
-                    }
-                    return new Failure<string>($"Failed to create a semaphore with name '{name}' and value {initialValue} with errno: {error}");
-                }
-
-                return new LinuxNamedSemaphore(name, semaphore);
+                return CreateOrOpenInternal(name, initialValue, createNew: true);
             }
             catch (Exception e)
             {
@@ -97,32 +103,7 @@ namespace BuildXL.Utilities.Core
         {
             try
             {
-                var validation = ValidateName(name);
-                if (!validation.Succeeded)
-                {
-                    return validation.Failure;
-                }
-
-                var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: true);
-
-                if (semaphore == IntPtr.Zero || error != 0)
-                {
-                    if (error == 17) // EEXIST
-                    {
-                        // Semaphore already exists, just open it.
-                        error = Ipc.SemOpen(name, initialValue, out semaphore, errorIfExists: false);
-                        if (semaphore == IntPtr.Zero || error != 0)
-                        {
-                            return new Failure<string>($"Failed to open existing semaphore with name '{name}' with errno: {error}");
-                        }
-                    }
-                    else
-                    {
-                        return new Failure<string>($"Failed to create a semaphore with name '{name}' and value {initialValue} with errno: {error}");
-                    }
-                }
-
-                return new LinuxNamedSemaphore(name, semaphore);
+                return CreateOrOpenInternal(name, initialValue, createNew: false);
             }
             catch (Exception e)
             {
