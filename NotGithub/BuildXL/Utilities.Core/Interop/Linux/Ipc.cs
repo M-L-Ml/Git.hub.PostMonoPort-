@@ -27,7 +27,7 @@ namespace BuildXL.Interop.Linux
         /// <summary>
         /// Create or open an existing semaphore.
         /// </summary>
-        public static int SemOpen(string name, uint initialCount, out IntPtr semaphore)
+        public static int SemOpen(string name, uint initialCount, out IntPtr semaphore, bool errorIfExists = false)
         {
             if (IsMacOS)
             {
@@ -36,9 +36,14 @@ namespace BuildXL.Interop.Linux
 
             // O_CREAT will create a new semaphore if one doesn't exist
             // O_EXCL will return an error if the specified semaphore name already exists
+            O_Flags flags = O_Flags.O_CREAT;
+            if (errorIfExists)
+            {
+                flags |= O_Flags.O_EXCL;
+            }
             semaphore = IsGLibC234OrGreater
-                ? sem_open_libc(name, (int)(O_Flags.O_CREAT | O_Flags.O_EXCL), mode: /*0644*/ 0x1a4, value: initialCount)
-                : sem_open_libpthread(name, (int)(O_Flags.O_CREAT | O_Flags.O_EXCL), mode: /*0644*/ 0x1a4, value: initialCount);
+                ? sem_open_libc(name, (int)flags, mode: /*0644*/ 0x1a4, value: initialCount)
+                : sem_open_libpthread(name, (int)flags, mode: /*0644*/ 0x1a4, value: initialCount);
             if (semaphore == IntPtr.Zero)
             {
                 return Marshal.GetLastWin32Error();
