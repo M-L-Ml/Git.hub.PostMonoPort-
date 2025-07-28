@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -52,6 +52,30 @@ namespace BuildXL.Utilities.Core
             else if (OperatingSystemHelper.IsLinuxOS)
             {
                 return LinuxNamedSemaphore.CreateNew(name, (uint)initialCount);
+            }
+            else
+            {
+                return new Failure<PlatformNotSupportedException>(new PlatformNotSupportedException($"Named Semaphores are not supported on current OS."));
+            }
+        }
+
+        /// <summary>
+        /// Creates a semaphore based on the current host platform, or opens it if it already exists.
+        /// </summary>
+        /// <param name="name">Name for the named semaphore.</param>
+        /// <param name="initialCount">Initial value of the semaphore.</param>
+        /// <param name="maximumCount">Maximum value of the semaphore (ignored for POSIX semaphores).</param>
+        /// <returns>Semaphore based on platform if successful, else null.</returns>
+        /// <exception cref="Exception">Not supported on non-Windows/non-Linux platforms.</exception>
+        public static Possible<INamedSemaphore> CreateOrOpen(string name, int initialCount, int maximumCount)
+        {
+            if (OperatingSystemHelper.IsWindowsOS)
+            {
+                return WindowsNamedSemaphore.CreateOrOpen(name, initialCount, maximumCount);
+            }
+            else if (OperatingSystemHelper.IsLinuxOS)
+            {
+                return LinuxNamedSemaphore.CreateOrOpen(name, (uint)initialCount);
             }
             else
             {

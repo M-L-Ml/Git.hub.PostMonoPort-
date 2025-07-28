@@ -27,7 +27,7 @@ namespace BuildXL.Interop.Linux
         /// <summary>
         /// Create or open an existing semaphore.
         /// </summary>
-        public static int SemOpen(string name, uint initialCount, out IntPtr semaphore, bool errorIfExists = false)
+        public static int SemOpen(string name, uint initialCount, out IntPtr semaphore, bool errorIfExists)
         {
             if (IsMacOS)
             {

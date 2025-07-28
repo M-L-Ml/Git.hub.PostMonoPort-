@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -43,6 +43,25 @@ namespace BuildXL.Utilities.Core
                     return new Failure<string>($"Failed to create semaphore with name '{name}' and value {initialCount} because a semaphore with this name already exists.");
                 }
 
+                return new WindowsNamedSemaphore(name, sem);
+            }
+            catch (Exception e)
+            {
+                return new Failure<string>(e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Try to create a named System.Threading.Semaphore, or open it if it already exists.
+        /// </summary>
+        /// <param name="name">Name of the semaphore.</param>
+        /// <param name="initialCount">Initial count of the semaphore</param>
+        /// <param name="maximumCount">Maximum count of the semaphore</param>
+        public static Possible<INamedSemaphore> CreateOrOpen(string name, int initialCount, int maximumCount)
+        {
+            try
+            {
+                var sem = new System.Threading.Semaphore(initialCount, maximumCount, name, out _);
                 return new WindowsNamedSemaphore(name, sem);
             }
             catch (Exception e)

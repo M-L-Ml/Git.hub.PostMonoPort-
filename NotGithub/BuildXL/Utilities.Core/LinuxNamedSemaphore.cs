@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -57,7 +57,7 @@ namespace BuildXL.Utilities.Core
                     return new Failure<ArgumentException>(new ArgumentException($"Semaphore name can only contain up to {Ipc.SemaphoreNameMaxLength} characters."));
                 }
 
-                var error = Ipc.SemOpen(name, initialValue, out var semaphore);
+                var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: true);
 
                 if (semaphore == IntPtr.Zero || error != 0)
                 {
@@ -66,6 +66,57 @@ namespace BuildXL.Utilities.Core
                         return new Failure<string>($"Semaphore with name '{name}' already exists.");
                     }
                     return new Failure<string>($"Failed to create a semaphore with name '{name}' and value {initialValue} with errno: {error}");
+                }
+
+                return new LinuxNamedSemaphore(name, semaphore);
+            }
+            catch (Exception e)
+            {
+                return new Failure<Exception>(e);
+            }
+        }
+
+        /// <summary>
+        /// Try to create a named pthread semaphore, or open it if it already exists.
+        /// </summary>
+        /// <param name="name">Name must be of the form /name up to 251 characters.</param>
+        /// <param name="initialValue">Initial value of the semaphore</param>
+        public static Possible<INamedSemaphore> CreateOrOpen(string name, uint initialValue)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(name) || name[0] != '/')
+                {
+                    return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/'"));
+                }
+
+                if (name.Count(c => c == '/') != 1)
+                {
+                    return new Failure<ArgumentException>(new ArgumentException("Semaphore name must start with '/' and contain exactly one '/' character"));
+                }
+
+                if (name.Length >= Ipc.SemaphoreNameMaxLength)
+                {
+                    return new Failure<ArgumentException>(new ArgumentException($"Semaphore name can only contain up to {Ipc.SemaphoreNameMaxLength} characters."));
+                }
+
+                var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: true);
+
+                if (semaphore == IntPtr.Zero || error != 0)
+                {
+                    if (error == 17) // EEXIST
+                    {
+                        // Semaphore already exists, just open it.
+                        error = Ipc.SemOpen(name, initialValue, out semaphore, errorIfExists: false);
+                        if (semaphore == IntPtr.Zero || error != 0)
+                        {
+                            return new Failure<string>($"Failed to open existing semaphore with name '{name}' with errno: {error}");
+                        }
+                    }
+                    else
+                    {
+                        return new Failure<string>($"Failed to create a semaphore with name '{name}' and value {initialValue} with errno: {error}");
+                    }
                 }
 
                 return new LinuxNamedSemaphore(name, semaphore);
