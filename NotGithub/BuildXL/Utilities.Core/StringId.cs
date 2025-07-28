@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -104,10 +104,10 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Creates a new string ID.
         /// </summary>
-        public static StringId Create(StringTable table, string value)
-        {
-            return table.AddString(value);
-        }
+        //public static StringId Create(StringTable table, string value)
+        //{
+        //    return table.AddString(value);
+        //}
 
         /// <inheritdoc />
         public override string ToString()
@@ -118,10 +118,10 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Converts the StringId to a string for logging
         /// </summary>
-        public string ToString(StringTable stringTable)
-        {
-            return stringTable.GetString(this);
-        }
+        //public string ToString(StringTable stringTable)
+        //{
+        //    return stringTable.GetString(this);
+        //}
 
         /// <summary>
         /// Equality operator for two StringIds

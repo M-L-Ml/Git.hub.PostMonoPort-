@@ -71,34 +71,34 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Global pool of maps from <see cref="BuildXL.Utilities.Core.FileArtifact"/> to <see cref="BuildXL.Utilities.Core.DirectoryArtifact"/>.
         /// </summary>
-        public static ObjectPool<Dictionary<FileArtifact, DirectoryArtifact>> FileDirectoryMapPool { get; } =
-            new ObjectPool<Dictionary<FileArtifact, DirectoryArtifact>>(
-                () => new Dictionary<FileArtifact, DirectoryArtifact>(),
-                map => { map.Clear(); return map; });
+        //public static ObjectPool<Dictionary<FileArtifact, DirectoryArtifact>> FileDirectoryMapPool { get; } =
+        //    new ObjectPool<Dictionary<FileArtifact, DirectoryArtifact>>(
+        //        () => new Dictionary<FileArtifact, DirectoryArtifact>(),
+        //        map => { map.Clear(); return map; });
 
-        /// <summary>
-        /// Global pool of maps from <see cref="BuildXL.Utilities.Core.FileArtifact"/> to many <see cref="BuildXL.Utilities.Core.DirectoryArtifact"/>.
-        /// </summary>
-        public static ObjectPool<MultiValueDictionary<FileArtifact, DirectoryArtifact>> FileMultiDirectoryMapPool { get; } =
-            new ObjectPool<MultiValueDictionary<FileArtifact, DirectoryArtifact>>(
-                () => new MultiValueDictionary<FileArtifact, DirectoryArtifact>(),
-                map => { map.Clear(); return map; });
+        ///// <summary>
+        ///// Global pool of maps from <see cref="BuildXL.Utilities.Core.FileArtifact"/> to many <see cref="BuildXL.Utilities.Core.DirectoryArtifact"/>.
+        ///// </summary>
+        //public static ObjectPool<MultiValueDictionary<FileArtifact, DirectoryArtifact>> FileMultiDirectoryMapPool { get; } =
+        //    new ObjectPool<MultiValueDictionary<FileArtifact, DirectoryArtifact>>(
+        //        () => new MultiValueDictionary<FileArtifact, DirectoryArtifact>(),
+        //        map => { map.Clear(); return map; });
 
-        /// <summary>
-        /// Global pool of maps from <see cref="BuildXL.Utilities.Core.AbsolutePath"/> to <see cref="BuildXL.Utilities.Core.FileArtifactWithAttributes"/>.
-        /// </summary>
-        public static ObjectPool<Dictionary<AbsolutePath, FileArtifactWithAttributes>> AbsolutePathFileArtifactWithAttributesMap { get; } =
-            new ObjectPool<Dictionary<AbsolutePath, FileArtifactWithAttributes>>(
-                () => new Dictionary<AbsolutePath, FileArtifactWithAttributes>(),
-                map => { map.Clear(); return map;});
+        ///// <summary>
+        ///// Global pool of maps from <see cref="BuildXL.Utilities.Core.AbsolutePath"/> to <see cref="BuildXL.Utilities.Core.FileArtifactWithAttributes"/>.
+        ///// </summary>
+        //public static ObjectPool<Dictionary<AbsolutePath, FileArtifactWithAttributes>> AbsolutePathFileArtifactWithAttributesMap { get; } =
+        //    new ObjectPool<Dictionary<AbsolutePath, FileArtifactWithAttributes>>(
+        //        () => new Dictionary<AbsolutePath, FileArtifactWithAttributes>(),
+        //        map => { map.Clear(); return map;});
 
-        /// <summary>
-        /// Global pool of maps from string to <see cref="BuildXL.Utilities.Core.FileArtifactWithAttributes"/>.
-        /// </summary>
-        public static ObjectPool<Dictionary<string, FileArtifactWithAttributes>> StringFileArtifactWithAttributesMap { get; } =
-            new ObjectPool<Dictionary<string, FileArtifactWithAttributes>>(
-                () => new Dictionary<string, FileArtifactWithAttributes>(),
-                map => { map.Clear(); return map; });
+        ///// <summary>
+        ///// Global pool of maps from string to <see cref="BuildXL.Utilities.Core.FileArtifactWithAttributes"/>.
+        ///// </summary>
+        //public static ObjectPool<Dictionary<string, FileArtifactWithAttributes>> StringFileArtifactWithAttributesMap { get; } =
+        //    new ObjectPool<Dictionary<string, FileArtifactWithAttributes>>(
+        //        () => new Dictionary<string, FileArtifactWithAttributes>(),
+        //        map => { map.Clear(); return map; });
 
         /// <summary>
         /// Global pool of StringBuilder instances.
@@ -111,10 +111,10 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Global pool of AbsolutePathAncestorChecker instances.
         /// </summary>
-        public static ObjectPool<AbsolutePathAncestorChecker> AbsolutePathAncestorCheckerPool { get; } = new ObjectPool<AbsolutePathAncestorChecker>(
-            () => new AbsolutePathAncestorChecker(),
+        //public static ObjectPool<AbsolutePathAncestorChecker> AbsolutePathAncestorCheckerPool { get; } = new ObjectPool<AbsolutePathAncestorChecker>(
+        //    () => new AbsolutePathAncestorChecker(),
             // Use Func instead of Action to avoid redundant delegate reconstruction.
-            checker => { checker.Clear(); return checker; });
+         //   checker => { checker.Clear(); return checker; });
 
         /// <summary>
         /// Global pool of List&lt;string&gt; instances.
@@ -134,27 +134,27 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Global pool of List&lt;FileArtifact&gt; instances.
         /// </summary>
-        public static ObjectPool<List<FileArtifact>> FileArtifactListPool { get; } = CreateListPool<FileArtifact>();
+        //public static ObjectPool<List<FileArtifact>> FileArtifactListPool { get; } = CreateListPool<FileArtifact>();
 
-        /// <summary>
-        /// Global pool of List&lt;FileArtifactWithAttributes&gt; instances.
-        /// </summary>
-        public static ObjectPool<List<FileArtifactWithAttributes>> FileArtifactWithAttributesListPool { get; } = CreateListPool<FileArtifactWithAttributes>();
+        ///// <summary>
+        ///// Global pool of List&lt;FileArtifactWithAttributes&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<List<FileArtifactWithAttributes>> FileArtifactWithAttributesListPool { get; } = CreateListPool<FileArtifactWithAttributes>();
 
-        /// <summary>
+        ///// <summary>
         /// Global pool of List&lt;DirectoryArtifact&gt; instances.
         /// </summary>
-        public static ObjectPool<List<DirectoryArtifact>> DirectoryArtifactListPool { get; } = CreateListPool<DirectoryArtifact>();
+        //public static ObjectPool<List<DirectoryArtifact>> DirectoryArtifactListPool { get; } = CreateListPool<DirectoryArtifact>();
 
-        /// <summary>
-        /// Global pool of Queue&lt;DirectoryArtifact&gt; instances.
-        /// </summary>
-        public static ObjectPool<Queue<DirectoryArtifact>> DirectoryArtifactQueuePool { get; } = CreateQueuePool<DirectoryArtifact>();
+        ///// <summary>
+        ///// Global pool of Queue&lt;DirectoryArtifact&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<Queue<DirectoryArtifact>> DirectoryArtifactQueuePool { get; } = CreateQueuePool<DirectoryArtifact>();
 
-        /// <summary>
-        /// Global pool of List&lt;AbsolutePath&gt; instances.
-        /// </summary>
-        public static ObjectPool<List<AbsolutePath>> AbsolutePathListPool { get; } = CreateListPool<AbsolutePath>();
+        ///// <summary>
+        ///// Global pool of List&lt;AbsolutePath&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<List<AbsolutePath>> AbsolutePathListPool { get; } = CreateListPool<AbsolutePath>();
 
         /// <summary>
         /// Global pool of List&lt;PathAtom&gt; instances.
@@ -169,32 +169,32 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Global pool of HashSet&lt;FileArtifact&gt; instances.
         /// </summary>
-        public static ObjectPool<HashSet<FileArtifact>> FileArtifactSetPool { get; } = CreateSetPool<FileArtifact>();
+        //public static ObjectPool<HashSet<FileArtifact>> FileArtifactSetPool { get; } = CreateSetPool<FileArtifact>();
 
-        /// <summary>
-        /// Global pool of HashSet&lt;FileArtifactWithAttributes&gt; instances.
-        /// </summary>
-        public static ObjectPool<HashSet<FileArtifactWithAttributes>> FileArtifactWithAttributesSetPool { get; } = CreateSetPool<FileArtifactWithAttributes>();
+        ///// <summary>
+        ///// Global pool of HashSet&lt;FileArtifactWithAttributes&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<HashSet<FileArtifactWithAttributes>> FileArtifactWithAttributesSetPool { get; } = CreateSetPool<FileArtifactWithAttributes>();
 
-        /// <summary>
-        /// Global pool of HashSet&lt;DirectoryArtifact&gt; instances.
-        /// </summary>
-        public static ObjectPool<HashSet<DirectoryArtifact>> DirectoryArtifactSetPool { get; } = CreateSetPool<DirectoryArtifact>();
+        ///// <summary>
+        ///// Global pool of HashSet&lt;DirectoryArtifact&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<HashSet<DirectoryArtifact>> DirectoryArtifactSetPool { get; } = CreateSetPool<DirectoryArtifact>();
 
-        /// <summary>
-        /// Global pool of HashSet&lt;AbsolutePath&gt; instances.
-        /// </summary>
-        public static ObjectPool<HashSet<AbsolutePath>> AbsolutePathSetPool { get; } = CreateSetPool<AbsolutePath>();
+        ///// <summary>
+        ///// Global pool of HashSet&lt;AbsolutePath&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<HashSet<AbsolutePath>> AbsolutePathSetPool { get; } = CreateSetPool<AbsolutePath>();
 
-        /// <summary>
-        /// Global pool of HashSet&lt;RelativePath&gt; instances.
-        /// </summary>
-        public static ObjectPool<HashSet<RelativePath>> RelativePathSetPool { get; } = CreateSetPool<RelativePath>();
+        ///// <summary>
+        ///// Global pool of HashSet&lt;RelativePath&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<HashSet<RelativePath>> RelativePathSetPool { get; } = CreateSetPool<RelativePath>();
 
-        /// <summary>
-        /// Global pool of HashSet&lt;(AbsolutePath, string)&gt; instances.
-        /// </summary>
-        public static ObjectPool<HashSet<(AbsolutePath, string)>> DirectoryMemberEntrySetPool { get; } = CreateSetPool<(AbsolutePath, string)>();
+        ///// <summary>
+        ///// Global pool of HashSet&lt;(AbsolutePath, string)&gt; instances.
+        ///// </summary>
+        //public static ObjectPool<HashSet<(AbsolutePath, string)>> DirectoryMemberEntrySetPool { get; } = CreateSetPool<(AbsolutePath, string)>();
 
         /// <summary>
         /// Global pool of char[] instances.
@@ -312,23 +312,23 @@ namespace BuildXL.Utilities.Core
         /// when you are done with the list. Calling Dispose returns the list to the
         /// pool.
         /// </remarks>
-        public static PooledObjectWrapper<List<FileArtifact>> GetFileArtifactList()
-        {
-            return FileArtifactListPool.GetInstance();
-        }
+        //public static PooledObjectWrapper<List<FileArtifact>> GetFileArtifactList()
+        //{
+        //    return FileArtifactListPool.GetInstance();
+        //}
     
-        /// <summary>
-        /// Gets an List&lt;FileArtifact&gt; instance from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the list. Calling Dispose returns the list to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<List<FileArtifactWithAttributes>> GetFileArtifactWithAttributesList()
-        {
-            return FileArtifactWithAttributesListPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets an List&lt;FileArtifact&gt; instance from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the list. Calling Dispose returns the list to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<List<FileArtifactWithAttributes>> GetFileArtifactWithAttributesList()
+        //{
+        //    return FileArtifactWithAttributesListPool.GetInstance();
+        //}
 
         /// <summary>
         /// Gets an List&lt;DirectoryArtifact&gt; instance from a common object pool.
@@ -338,23 +338,23 @@ namespace BuildXL.Utilities.Core
         /// when you are done with the list. Calling Dispose returns the list to the
         /// pool.
         /// </remarks>
-        public static PooledObjectWrapper<List<DirectoryArtifact>> GetDirectoryArtifactList()
-        {
-            return DirectoryArtifactListPool.GetInstance();
-        }
+        //public static PooledObjectWrapper<List<DirectoryArtifact>> GetDirectoryArtifactList()
+        //{
+        //    return DirectoryArtifactListPool.GetInstance();
+        //}
 
-        /// <summary>
-        /// Gets an List&lt;AbsolutePath&gt; instance from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the list. Calling Dispose returns the list to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<List<AbsolutePath>> GetAbsolutePathList()
-        {
-            return AbsolutePathListPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets an List&lt;AbsolutePath&gt; instance from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the list. Calling Dispose returns the list to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<List<AbsolutePath>> GetAbsolutePathList()
+        //{
+        //    return AbsolutePathListPool.GetInstance();
+        //}
 
         /// <summary>
         /// Gets a List&lt;PathAtom&gt; instance from a common object pool.
@@ -403,101 +403,101 @@ namespace BuildXL.Utilities.Core
         /// when you are done with the set. Calling Dispose returns the set to the
         /// pool.
         /// </remarks>
-        public static PooledObjectWrapper<HashSet<FileArtifact>> GetFileArtifactSet()
-        {
-            return FileArtifactSetPool.GetInstance();
-        }
+        //public static PooledObjectWrapper<HashSet<FileArtifact>> GetFileArtifactSet()
+        //{
+        //    return FileArtifactSetPool.GetInstance();
+        //}
 
-        /// <summary>
-        /// Gets an HashSet&lt;FileArtifactWithAttributes&gt; instance from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the set. Calling Dispose returns the set to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<HashSet<FileArtifactWithAttributes>> GetFileArtifactWithAttributesSet()
-        {
-            return FileArtifactWithAttributesSetPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets an HashSet&lt;FileArtifactWithAttributes&gt; instance from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the set. Calling Dispose returns the set to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<HashSet<FileArtifactWithAttributes>> GetFileArtifactWithAttributesSet()
+        //{
+        //    return FileArtifactWithAttributesSetPool.GetInstance();
+        //}
         
 
-        /// <summary>
-        /// Gets an HashSet&lt;DirectoryArtifact&gt; instance from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the set. Calling Dispose returns the set to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<HashSet<DirectoryArtifact>> GetDirectoryArtifactSet()
-        {
-            return DirectoryArtifactSetPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets an HashSet&lt;DirectoryArtifact&gt; instance from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the set. Calling Dispose returns the set to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<HashSet<DirectoryArtifact>> GetDirectoryArtifactSet()
+        //{
+        //    return DirectoryArtifactSetPool.GetInstance();
+        //}
 
-        /// <summary>
-        /// Gets an HashSet&lt;AbsolutePath&gt; instance from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the set. Calling Dispose returns the set to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<HashSet<AbsolutePath>> GetAbsolutePathSet()
-        {
-            return AbsolutePathSetPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets an HashSet&lt;AbsolutePath&gt; instance from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the set. Calling Dispose returns the set to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<HashSet<AbsolutePath>> GetAbsolutePathSet()
+        //{
+        //    return AbsolutePathSetPool.GetInstance();
+        //}
 
-        /// <summary>
-        /// Gets an HashSet&lt;AbsolutePathAncestorChecker&gt; instance from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the set. Calling Dispose returns the set to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<AbsolutePathAncestorChecker> GetAbsolutePathAncestorChecker()
-        {
-            return AbsolutePathAncestorCheckerPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets an HashSet&lt;AbsolutePathAncestorChecker&gt; instance from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the set. Calling Dispose returns the set to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<AbsolutePathAncestorChecker> GetAbsolutePathAncestorChecker()
+        //{
+        //    return AbsolutePathAncestorCheckerPool.GetInstance();
+        //}
 
-        /// <summary>
-        /// Gets an HashSet&lt;(AbsolutePath, string)&gt; instance from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the set. Calling Dispose returns the set to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<HashSet<(AbsolutePath, string)>> GetDirectoryMemberSet()
-        {
-            return DirectoryMemberEntrySetPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets an HashSet&lt;(AbsolutePath, string)&gt; instance from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the set. Calling Dispose returns the set to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<HashSet<(AbsolutePath, string)>> GetDirectoryMemberSet()
+        //{
+        //    return DirectoryMemberEntrySetPool.GetInstance();
+        //}
 
-        /// <summary>
-        /// Gets a mapping from <see cref="BuildXL.Utilities.Core.FileArtifact"/> to <see cref="DirectoryArtifact"/> from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the set. Calling Dispose returns the set to the
-        /// pool.
-        /// </remarks>
-        public static PooledObjectWrapper<Dictionary<FileArtifact, DirectoryArtifact>> GetFileDirectoryMap()
-        {
-            return FileDirectoryMapPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets a mapping from <see cref="BuildXL.Utilities.Core.FileArtifact"/> to <see cref="DirectoryArtifact"/> from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the set. Calling Dispose returns the set to the
+        ///// pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<Dictionary<FileArtifact, DirectoryArtifact>> GetFileDirectoryMap()
+        //{
+        //    return FileDirectoryMapPool.GetInstance();
+        //}
 
-        /// <summary>
-        /// Gets a mapping from <see cref="BuildXL.Utilities.Core.FileArtifact"/> to many <see cref="DirectoryArtifact"/> from a common object pool.
-        /// </summary>
-        /// <remarks>
-        /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
-        /// when you are done with the set. Calling Dispose returns the set to the pool.
-        /// </remarks>
-        public static PooledObjectWrapper<MultiValueDictionary<FileArtifact, DirectoryArtifact>> GetFileMultiDirectoryMap()
-        {
-            return FileMultiDirectoryMapPool.GetInstance();
-        }
+        ///// <summary>
+        ///// Gets a mapping from <see cref="BuildXL.Utilities.Core.FileArtifact"/> to many <see cref="DirectoryArtifact"/> from a common object pool.
+        ///// </summary>
+        ///// <remarks>
+        ///// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
+        ///// when you are done with the set. Calling Dispose returns the set to the pool.
+        ///// </remarks>
+        //public static PooledObjectWrapper<MultiValueDictionary<FileArtifact, DirectoryArtifact>> GetFileMultiDirectoryMap()
+        //{
+        //    return FileMultiDirectoryMapPool.GetInstance();
+        //}
 
         /// <summary>
         /// Gets an HashSet&lt;StringId&gt; instance from a common object pool.
@@ -519,9 +519,9 @@ namespace BuildXL.Utilities.Core
         /// You are expected to call the Dispose method on the returned PooledObjectWrapper instance
         /// when you are done with the set. Calling Dispose returns the set to the pool.
         /// </remarks>
-        public static PooledObjectWrapper<Dictionary<AbsolutePath, FileArtifactWithAttributes>> GetAbsolutePathFileArtifactWithAttributesMap()
-        {
-            return AbsolutePathFileArtifactWithAttributesMap.GetInstance();
-        }
+        //public static PooledObjectWrapper<Dictionary<AbsolutePath, FileArtifactWithAttributes>> GetAbsolutePathFileArtifactWithAttributesMap()
+        //{
+        //    return AbsolutePathFileArtifactWithAttributesMap.GetInstance();
+        //}
     }
 }
