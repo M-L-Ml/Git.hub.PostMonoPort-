@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -34,12 +34,12 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Checks if the segment only contains valid characters for a path atom.
         /// </summary>
-        bool CheckIfOnlyContainsValidPathAtomChars(out int characterWithError);
+        //bool CheckIfOnlyContainsValidPathAtomChars(out int characterWithError);
 
         /// <summary>
         /// Checks if the segment only contains valid characters for an identifier atom.
         /// </summary>
-        bool CheckIfOnlyContainsValidIdentifierAtomChars(out int characterWithError);
+        //bool CheckIfOnlyContainsValidIdentifierAtomChars(out int characterWithError);
 
         /// <summary>
         /// Returns a sub segment of an existing segment.

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -257,40 +257,40 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Checks if the segment only contains valid characters for a path atom.
         /// </summary>
-        public bool CheckIfOnlyContainsValidPathAtomChars(out int characterWithError)
-        {
-            int end = m_index + Length;
-            for (int i = m_index; i < end; i++)
-            {
-                if (!PathAtom.IsValidPathAtomChar(m_value[i]))
-                {
-                    characterWithError = i;
-                    return false;
-                }
-            }
+        //public bool CheckIfOnlyContainsValidPathAtomChars(out int characterWithError)
+        //{
+        //    int end = m_index + Length;
+        //    for (int i = m_index; i < end; i++)
+        //    {
+        //        if (!PathAtom.IsValidPathAtomChar(m_value[i]))
+        //        {
+        //            characterWithError = i;
+        //            return false;
+        //        }
+        //    }
 
-            characterWithError = -1;
-            return true;
-        }
+        //    characterWithError = -1;
+        //    return true;
+        //}
 
         /// <summary>
         /// Checks if the segment only contains valid characters for an identifier atom.
         /// </summary>
-        public bool CheckIfOnlyContainsValidIdentifierAtomChars(out int characterWithError)
-        {
-            int end = m_index + Length;
-            for (int i = m_index; i < end; i++)
-            {
-                if (!SymbolAtom.IsValidIdentifierAtomChar(m_value[i]))
-                {
-                    characterWithError = i;
-                    return false;
-                }
-            }
+        //public bool CheckIfOnlyContainsValidIdentifierAtomChars(out int characterWithError)
+        //{
+        //    int end = m_index + Length;
+        //    for (int i = m_index; i < end; i++)
+        //    {
+        //        if (!SymbolAtom.IsValidIdentifierAtomChar(m_value[i]))
+        //        {
+        //            characterWithError = i;
+        //            return false;
+        //        }
+        //    }
 
-            characterWithError = -1;
-            return true;
-        }
+        //    characterWithError = -1;
+        //    return true;
+        //}
 
         /// <summary>
         /// The length of the segment

@@ -17,7 +17,7 @@ namespace BuildXL.Utilities.Core
     /// This type represents a single file name or directory name.
     /// </remarks>
     [DebuggerDisplay("{ToDebuggerDisplay(),nq}")]
-    public readonly struct PathAtom //: IEquatable<PathAtom>, IPathSegment
+    public readonly struct PathAtom : IEquatable<PathAtom>//, IPathSegment
     {
         /// <summary>
         /// Invalid atom for uninitialized fields.
@@ -67,12 +67,12 @@ namespace BuildXL.Utilities.Core
         /// The rules for a valid path atom are that the input string may not
         /// be empty and must only contain characters reported as valid by IsValidPathAtomChar.
         /// </remarks>
-        public static bool Validate<T>(T prospectiveAtom)
-            where T : struct, ICharSpan<T>
-        {
-            ParseResult parseResult = Validate(prospectiveAtom, out _);
-            return parseResult == ParseResult.Success;
-        }
+        //public static bool Validate<T>(T prospectiveAtom)
+        //    where T : struct, ICharSpan<T>
+        //{
+        //    ParseResult parseResult = Validate(prospectiveAtom, out _);
+        //    return parseResult == ParseResult.Success;
+        //}
 
         /// <summary>
         /// Validate whether a string is a valid path atom.
@@ -81,28 +81,61 @@ namespace BuildXL.Utilities.Core
         /// The rules for a valid path atom are that the input string may not
         /// be empty and must only contain characters reported as valid by IsValidPathAtomChar.
         /// </remarks>
-        public static ParseResult Validate<T>(T prospectiveAtom, out int characterWithError)
-            where T : struct, ICharSpan<T>
+        //public static ParseResult Validate<T>(T prospectiveAtom, out int characterWithError)
+        //    where T : struct, ICharSpan<T>
+        //{
+        //    if (prospectiveAtom.Length == 0)
+        //    {
+        //        // can't be empty
+        //        characterWithError = 0;
+        //        return ParseResult.FailureDueToEmptyValue;
+        //    }
+
+        //    if (prospectiveAtom.CheckIfOnlyContainsValidPathAtomChars(out characterWithError))
+        //    {
+        //        // NOTE: In theory, we should prevent path atoms that use the well-known no-no strings
+        //        //       from Windows such as AUX, COM1, LPN1. We don't do that though, it's not worth the
+        //        //       cycles.
+        //        return ParseResult.Success;
+        //    }
+
+        //    return ParseResult.FailureDueToInvalidCharacter;
+        //}
+
+        ////del
+
+        /// <summary>
+        /// Indicates if this path atom and the one given represent the same underlying value.
+        /// </summary>
+        /// <remarks>
+        /// Note that it is only meaningful to compare PathAtoms created against the same StringTable.
+        /// </remarks>
+        public bool Equals(PathAtom other)
         {
-            if (prospectiveAtom.Length == 0)
-            {
-                // can't be empty
-                characterWithError = 0;
-                return ParseResult.FailureDueToEmptyValue;
-            }
-
-            if (prospectiveAtom.CheckIfOnlyContainsValidPathAtomChars(out characterWithError))
-            {
-                // NOTE: In theory, we should prevent path atoms that use the well-known no-no strings
-                //       from Windows such as AUX, COM1, LPN1. We don't do that though, it's not worth the
-                //       cycles.
-                return ParseResult.Success;
-            }
-
-            return ParseResult.FailureDueToInvalidCharacter;
+            return StringId == other.StringId;
+        }
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return StringId.GetHashCode();
         }
 
- ////del
+        /// <summary>
+        /// Equality operator for two PathAtoms.
+        /// </summary>
+        public static bool operator ==(PathAtom left, PathAtom right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Inequality operator for two PathAtoms.
+        /// </summary>
+        public static bool operator !=(PathAtom left, PathAtom right)
+        {
+            return !left.Equals(right);
+        }
+
 
         /// <nodoc/>
         [ExcludeFromCodeCoverage]
