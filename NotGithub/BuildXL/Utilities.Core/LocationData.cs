@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -68,22 +68,22 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Implicit conversion of TokenData to LocationData.
         /// </summary>
-        public static implicit operator LocationData(TokenData token)
-        {
-            return !token.IsValid ? Invalid : new LocationData(token.Path, token.Line, token.Position);
-        }
+        //public static implicit operator LocationData(TokenData token)
+        //{
+        //    return !token.IsValid ? Invalid : new LocationData(token.Path, token.Line, token.Position);
+        ////}
 
-        /// <summary>
-        /// Constructs a LocationData.
-        /// </summary>
-        public LocationData(Token token)
-        {
-            Contract.Requires(token.Path.IsValid);
+        ///// <summary>
+        ///// Constructs a LocationData.
+        ///// </summary>
+        //public LocationData(Token token)
+        //{
+        //    Contract.Requires(token.Path.IsValid);
 
-            Path = token.Path;
-            Line = token.Line;
-            Position = token.Position;
-        }
+        //    Path = token.Path;
+        //    Line = token.Line;
+        //    Position = token.Position;
+        //}
 
         /// <summary>
         /// Converts a LocationData object to a Log Location

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -164,7 +164,7 @@ namespace BuildXL.Utilities.Core
         /// <summary>
         /// Global pool of List&lt;IdentifierAtom&gt; instances.
         /// </summary>
-        public static ObjectPool<List<SymbolAtom>> IdentifierAtomListPool { get; } = CreateListPool<SymbolAtom>();
+    //    public static ObjectPool<List<SymbolAtom>> IdentifierAtomListPool { get; } = CreateListPool<SymbolAtom>();
 
         /// <summary>
         /// Global pool of HashSet&lt;FileArtifact&gt; instances.
@@ -390,10 +390,10 @@ namespace BuildXL.Utilities.Core
         /// when you are done with the list. Calling Dispose returns the list to the
         /// pool.
         /// </remarks>
-        public static PooledObjectWrapper<List<SymbolAtom>> GetIdentifierAtomList()
-        {
-            return IdentifierAtomListPool.GetInstance();
-        }
+        //public static PooledObjectWrapper<List<SymbolAtom>> GetIdentifierAtomList()
+        //{
+        //    return IdentifierAtomListPool.GetInstance();
+        //}
 
         /// <summary>
         /// Gets an HashSet&lt;FileArtifact&gt; instance from a common object pool.

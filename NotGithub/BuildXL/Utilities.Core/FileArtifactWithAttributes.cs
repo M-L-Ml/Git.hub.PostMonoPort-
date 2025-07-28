@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -326,21 +326,21 @@ namespace BuildXL.Utilities.Core
         }
 #pragma warning restore 809
 
-        internal static FileArtifactWithAttributes Deserialize(BuildXLReader reader)
-        {
-            Contract.RequiresNotNull(reader);
+        //internal static FileArtifactWithAttributes Deserialize(BuildXLReader reader)
+        //{
+        //    Contract.RequiresNotNull(reader);
 
-            return new FileArtifactWithAttributes(
-                reader.ReadAbsolutePath(),
-                reader.ReadUInt32());
-        }
+        //    return new FileArtifactWithAttributes(
+        //        reader.ReadAbsolutePath(),
+        //        reader.ReadUInt32());
+        //}
 
-        internal void Serialize(BuildXLWriter writer)
-        {
-            Contract.RequiresNotNull(writer);
+        //internal void Serialize(BuildXLWriter writer)
+        //{
+        //    Contract.RequiresNotNull(writer);
 
-            writer.Write(m_path);
-            writer.Write(m_rewriteCountAndFileExistenceAndFileRewrite);
-        }
+        //    writer.Write(m_path);
+        //    writer.Write(m_rewriteCountAndFileExistenceAndFileRewrite);
+        //}
     }
 }
