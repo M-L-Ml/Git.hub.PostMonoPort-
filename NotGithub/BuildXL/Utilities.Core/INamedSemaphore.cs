@@ -27,6 +27,7 @@ namespace BuildXL.Utilities.Core
         /// <param name="timeoutMilliseconds">If less than zero, then a blocking wait will be used.</param>
         /// <returns>False if a timed out.</returns>
         public bool WaitOne(int timeoutMilliseconds);
+        bool WaitOne() => WaitOne(System.Threading.Timeout.Infinite);
     }
 
     /// <summary>

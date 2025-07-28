@@ -61,6 +61,10 @@ namespace BuildXL.Utilities.Core
 
                 if (semaphore == IntPtr.Zero || error != 0)
                 {
+                    if (error == 17) // EEXIST
+                    {
+                        return new Failure<string>($"Semaphore with name '{name}' already exists.");
+                    }
                     return new Failure<string>($"Failed to create a semaphore with name '{name}' and value {initialValue} with errno: {error}");
                 }
 
@@ -104,6 +108,10 @@ namespace BuildXL.Utilities.Core
             }
             else
             {
+                if (timeoutMilliseconds > 1)
+                {
+                    throw new NotSupportedException("Timed wait is not supported on Linux named semaphores.");
+                }
                 ret = Ipc.SemTryWait(m_semaphore);
             }
 
