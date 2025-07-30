@@ -4,8 +4,10 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using BuildXL.Interop.Linux;
 using BuildXL.Utilities.Core.Tasks;
+using Microsoft.Win32.SafeHandles;
 
 namespace BuildXL.Utilities.Core
 {
@@ -14,24 +16,41 @@ namespace BuildXL.Utilities.Core
     /// </summary>
     public class LinuxNamedSemaphore : INamedSemaphore
     {
+        /// <summary>
+        /// Represents a wrapper for a semaphore handle.
+        /// </summary>
+        public class SemaphoreHandle : SafeHandleZeroOrMinusOneIsInvalid
+        {
+            private readonly string m_name;
+
+            /// <nodoc />
+            public SemaphoreHandle(string name, IntPtr handle)
+                : base(true)
+            {
+                m_name = name;
+                SetHandle(handle);
+            }
+
+            /// <inheritdoc />
+            protected override bool ReleaseHandle()
+            {
+                Ipc.SemClose(handle);
+                Ipc.SemUnlink(m_name);
+                return true;
+            }
+        }
+
         /// <inheritdoc/>
         public string Name => m_name;
 
-        private readonly IntPtr m_semaphore;
+        private readonly SemaphoreHandle m_semaphore;
         private readonly string m_name;
-        private bool m_disposed;
 
         /// <nodoc/>
-        private LinuxNamedSemaphore(string name, IntPtr semaphore)
+        private LinuxNamedSemaphore(string name, SemaphoreHandle semaphore)
         {
             m_name = name;
             m_semaphore = semaphore;
-        }
-
-        /// <nodoc/>
-        ~LinuxNamedSemaphore()
-        {
-            Dispose(false);
         }
 
         /// <summary>
@@ -67,9 +86,9 @@ namespace BuildXL.Utilities.Core
                 return validation.Failure;
             }
 
-            var error = Ipc.SemOpen(name, initialValue, out var semaphore, errorIfExists: createNew);
+            var error = Ipc.SemOpen(name, initialValue, out var semaphorePtr, errorIfExists: createNew);
 
-            if (semaphore == IntPtr.Zero || error != 0)
+            if (semaphorePtr == IntPtr.Zero || error != 0)
             {
 
                 var failureMessage = createNew
@@ -79,7 +98,7 @@ namespace BuildXL.Utilities.Core
                 return new Failure<string>(failureMessage);
             }
 
-            return new LinuxNamedSemaphore(name, semaphore);
+            return new LinuxNamedSemaphore(name, new SemaphoreHandle(name, semaphorePtr));
         }
 
         public static Possible<INamedSemaphore> CreateNew(string name, uint initialValue)
@@ -115,7 +134,8 @@ namespace BuildXL.Utilities.Core
         public int Release()
         {
             int previousValue = GetValue();
-            int ret = Ipc.SemPost(m_semaphore);
+            var handle = m_semaphore.DangerousGetHandle();
+            int ret = Ipc.SemPost(handle);
             CheckReturnValue(ret);
 
             return previousValue;
@@ -126,7 +146,8 @@ namespace BuildXL.Utilities.Core
         /// </summary>
         private int GetValue()
         {
-            int ret = Ipc.SemGetValue(m_semaphore, out int value);
+            var handle = m_semaphore.DangerousGetHandle();
+            int ret = Ipc.SemGetValue(handle, out int value);
             CheckReturnValue(ret);
 
             return value;
@@ -137,9 +158,10 @@ namespace BuildXL.Utilities.Core
         {
             // Timed wait currently not supported on Linux, provided timeout is ignored unless it's less than zero in which case we wait indefinitely.
             int ret = 0;
+            var handle = m_semaphore.DangerousGetHandle();
             if (timeoutMilliseconds < 0)
             {
-                ret = Ipc.SemWait(m_semaphore);
+                ret = Ipc.SemWait(handle);
             }
             else
             {
@@ -147,7 +169,7 @@ namespace BuildXL.Utilities.Core
                 {
                     throw new NotSupportedException("Timed wait is not supported on Linux named semaphores.");
                 }
-                ret = Ipc.SemTryWait(m_semaphore);
+                ret = Ipc.SemTryWait(handle);
             }
 
             CheckReturnValue(ret);
@@ -169,23 +191,7 @@ namespace BuildXL.Utilities.Core
         /// <inheritdoc/>
         public void Dispose()
         {
-            Dispose(true);
-        }
-
-        /// <nodoc/>
-        public void Dispose(bool disposing)
-        {
-            if (!m_disposed)
-            {
-                m_disposed = true;
-                int ret = Ipc.SemClose(m_semaphore);
-                ret = Ipc.SemUnlink(Name);
-
-                if (disposing)
-                {
-                    GC.SuppressFinalize(this);
-                }
-            }
+            m_semaphore.Dispose();
         }
     }
 }
