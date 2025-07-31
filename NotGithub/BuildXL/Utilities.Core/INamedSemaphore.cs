@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using BuildXL.Interop.Linux;
 
 namespace BuildXL.Utilities.Core
 {
@@ -81,6 +82,19 @@ namespace BuildXL.Utilities.Core
             {
                 return new Failure<PlatformNotSupportedException>(new PlatformNotSupportedException($"Named Semaphores are not supported on current OS."));
             }
+        }
+
+        /// <param name="semaphoreName">The name of the semaphore to delete.</param>
+        public static void DeleteIfExists(string semaphoreName)
+        {
+            if (OperatingSystemHelper.IsLinuxOS ||OperatingSystemHelper.IsUnixOS)
+            {
+                // The return value is ignored. If the semaphore does not exist, a non-zero value is returned, which is fine.
+                Ipc.SemUnlink(semaphoreName);
+            }
+
+            // On Windows, named semaphores are kernel objects that are automatically deleted when the last handle is closed.
+            // There is no explicit unlink mechanism, so this is a no-op.
         }
     }
 }
